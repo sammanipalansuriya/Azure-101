@@ -1,0 +1,183 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DistilledServicePlanName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "DistilledServicePlanSKU": {
+            "type": "string",
+            "allowedValues": [
+                "Free",
+                "Shared",
+                "Basic",
+                "Standard"
+            ],
+            "defaultValue": "Free"
+        },
+        "DistilledServicePlanWorkerSize": {
+            "type": "string",
+            "allowedValues": [
+                "0",
+                "1",
+                "2"
+            ],
+            "defaultValue": "0"
+        },
+        "distilledsqlserverAdminLogin": {
+            "type": "string",
+            "minLength": 1
+        },
+        "distilledsqlserverAdminLoginPassword": {
+            "type": "securestring"
+        },
+        "distilledprodName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "distilledprodCollation": {
+            "type": "string",
+            "minLength": 1,
+            "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
+        },
+        "distilledprodEdition": {
+            "type": "string",
+            "defaultValue": "Basic",
+            "allowedValues": [
+                "Basic",
+                "Standard",
+                "Premium"
+            ]
+        },
+        "distilledprodRequestedServiceObjectiveName": {
+            "type": "string",
+            "defaultValue": "Basic",
+            "allowedValues": [
+                "Basic",
+                "S0",
+                "S1",
+                "S2",
+                "P1",
+                "P2",
+                "P3"
+            ],
+            "metadata": {
+                "description": "Describes the performance level for Edition"
+            }
+        },
+        "distilledfilestorageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_ZRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Premium_LRS"
+            ]
+        }
+    },
+    "variables": {
+        "DistilledWebApplicationName": "[concat('DistilledWebApplication', uniqueString(resourceGroup().id))]",
+        "distilledsqlserverName": "[concat('distilledsqlserver', uniqueString(resourceGroup().id))]",
+        "distilledfilestorageName": "[concat('distilledfilestorage', uniqueString(resourceGroup().id))]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('DistilledServicePlanName')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2014-06-01",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "DistilledServicePlan"
+            },
+            "properties": {
+                "name": "[parameters('DistilledServicePlanName')]",
+                "sku": "[parameters('DistilledServicePlanSKU')]",
+                "workerSize": "[parameters('DistilledServicePlanWorkerSize')]",
+                "numberOfWorkers": 1
+            }
+        },
+        {
+            "name": "[variables('DistilledWebApplicationName')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-08-01",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', parameters('DistilledServicePlanName'))]"
+            ],
+            "tags": {
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('DistilledServicePlanName'))]": "Resource",
+                "displayName": "DistilledWebApplication"
+            },
+            "properties": {
+                "name": "[variables('DistilledWebApplicationName')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('DistilledServicePlanName'))]"
+            }
+        },
+        {
+            "name": "[variables('distilledsqlserverName')]",
+            "type": "Microsoft.Sql/servers",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2014-04-01-preview",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "distilledsqlserver"
+            },
+            "properties": {
+                "administratorLogin": "[parameters('distilledsqlserverAdminLogin')]",
+                "administratorLoginPassword": "[parameters('distilledsqlserverAdminLoginPassword')]"
+            },
+            "resources": [
+                {
+                    "name": "AllowAllWindowsAzureIps",
+                    "type": "firewallrules",
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2014-04-01-preview",
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', variables('distilledsqlserverName'))]"
+                    ],
+                    "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                    }
+                },
+                {
+                    "name": "[parameters('distilledprodName')]",
+                    "type": "databases",
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2014-04-01-preview",
+                    "dependsOn": [
+                        "[variables('distilledsqlserverName')]"
+                    ],
+                    "tags": {
+                        "displayName": "distilledprod"
+                    },
+                    "properties": {
+                        "collation": "[parameters('distilledprodCollation')]",
+                        "edition": "[parameters('distilledprodEdition')]",
+                        "maxSizeBytes": "1073741824",
+                        "requestedServiceObjectiveName": "[parameters('distilledprodRequestedServiceObjectiveName')]"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "[variables('distilledfilestorageName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "distilledfilestorage"
+            },
+            "properties": {
+                "accountType": "[parameters('distilledfilestorageType')]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
