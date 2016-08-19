@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Day 01", "Day 01", "{A6999FBE-853A-4408-B566-0D3DEC6972FD}"
 EndProject
@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{6F18C028
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assignment", "Assignment", "{A383F47F-9F3F-422F-93F6-E7F38FD1A7CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoUniversity", "C:\Users\spa\Downloads\Azure-101-master\Azure-101-master\AzureTraining\E-Fsample\ContosoUniversity\ContosoUniversity.csproj", "{264E21D6-4024-4A53-B1BE-1CD42F3348FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{A5D78AA1-529A-4D39-B362-C1A1C4E90972}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5D78AA1-529A-4D39-B362-C1A1C4E90972}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5D78AA1-529A-4D39-B362-C1A1C4E90972}.Release|Any CPU.Build.0 = Release|Any CPU
+		{264E21D6-4024-4A53-B1BE-1CD42F3348FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{264E21D6-4024-4A53-B1BE-1CD42F3348FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{264E21D6-4024-4A53-B1BE-1CD42F3348FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{264E21D6-4024-4A53-B1BE-1CD42F3348FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,5 +51,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{C634A6A1-F24F-4E11-9832-41618A20C0FE} = {A6999FBE-853A-4408-B566-0D3DEC6972FD}
 		{A5D78AA1-529A-4D39-B362-C1A1C4E90972} = {B6A3E976-D1E4-4E9A-9D24-6BD217C1FC02}
+		{264E21D6-4024-4A53-B1BE-1CD42F3348FE} = {9912EB4C-EE2F-4670-B87A-A0C5F784E3EE}
 	EndGlobalSection
 EndGlobal
